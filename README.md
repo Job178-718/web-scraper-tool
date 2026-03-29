@@ -2,8 +2,6 @@
 
 专业的网页抓取和内容提取工具，界面现代简洁，功能强大易用。
 
-**by 小柒** 🍀
-
 ## ✨ 特性
 
 - 🎨 **现代化 UI** - 深色主题，GitHub 风格界面
@@ -46,8 +44,6 @@ npm run build:win
 - `Web Scraper Pro Setup 2.0.0.exe` - 安装版
 - `WebScraperPro-Portable-2.0.0.exe` - 便携版
 
-详细打包说明见 [PACKAGE_GUIDE.md](./PACKAGE_GUIDE.md)
-
 ## 📖 使用指南
 
 ### 1. 加载网页
@@ -76,7 +72,6 @@ npm run build:win
 - 自动生成精准的选择器
 
 ## 🛠️ 技术栈
-
 - **Electron** - 桌面应用框架
 - **Webview** - 网页渲染
 - **现代 CSS** - 深色主题，流畅动画
@@ -123,4 +118,3 @@ web-scraper-tool/
 
 **版本**: 2.0  
 **更新日期**: 2026-03-28  
-**开发者**: 小柒 🍀

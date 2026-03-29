@@ -68,7 +68,7 @@ function bindEvents() {
     "src": "https://wkphoto.cdn.bcebos.com/63d0f703918fa0ec6c75ea55369759ee3d6ddb3c.jpg",
     "imgboxIndex": "20"
   }];
-       //window.ContentExtractor.showDownloadGroup(mockData); // 切换标签时隐藏下载条目
+      // window.ContentExtractor.showDownloadGroup(mockData); // 切换标签时隐藏下载条目
     });
   });
 

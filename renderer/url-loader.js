@@ -14,8 +14,15 @@ async function loadUrl() {
     return;
   }
 
-  if (!url.startsWith('http')) {
-    url = 'https://' + url;
+  // 更健壮的URL处理
+  try {
+    // 如果已经是有效的URL，直接使用
+    new URL(url);
+  } catch (e) {
+    // 如果不是有效URL，尝试添加协议
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
   }
 
   console.log('正在加载:', url);
@@ -24,7 +31,11 @@ async function loadUrl() {
   window.Utils.setCurrentPageInfo('正在加载: ' + url);
 
   try {
+    // 确保webview有正确的属性
     webview.src = url;
+    
+    // 重置webview准备状态
+    window._webviewReady = false;
   } catch (error) {
     console.error('加载失败:', error);
     window.Utils.showLoading(false);
@@ -32,6 +43,7 @@ async function loadUrl() {
     window.Utils.setCurrentPageInfo('加载失败');
   }
 }
+
 
 function refreshPage() {
   const webview = window.Utils.$('webview');
