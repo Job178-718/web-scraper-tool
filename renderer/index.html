@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: http:; frame-src *;">
+  <title>Web Scraper Pro</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <!-- 顶部工具栏 -->
+    <header class="toolbar">
+      <div class="toolbar-left">
+        <span class="logo">🕷️ Web Scraper Pro</span>
+      </div>
+      <div class="toolbar-center">
+        <div class="url-bar">
+          <input type="url" id="urlInput" placeholder="输入网址，按回车加载..." />
+          <button id="loadBtn" class="btn-icon" title="加载">▶️</button>
+          <button id="refreshBtn" class="btn-icon" title="刷新">🔄</button>
+        </div>
+      </div>
+      <div class="toolbar-right">
+        <button id="selectModeBtn" class="btn-tool" title="元素选择器">
+          <span class="icon">🎯</span>
+          <span class="text">选择元素</span>
+        </button>
+        <button id="exportBtn" class="btn-tool" title="导出数据">
+          <span class="icon">💾</span>
+          <span class="text">导出</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 主体区域 -->
+    <div class="main">
+      <!-- 左侧边栏 -->
+      <aside class="sidebar">
+        <!-- Tab 切换 -->
+        <div class="tabs">
+          <button class="tab active" data-tab="extract">📦 内容提取</button>
+          <button class="tab" data-tab="cleanup">🧹 页面清理</button>
+          <button class="tab" data-tab="inject">💉 脚本注入</button>
+          <button class="tab" data-tab="source">📄 页面源码</button>
+        </div>
+
+        <!-- 当前页面信息 -->
+        <div class="current-page-info" style="padding: 10px 12px; color: #8f9cad; font-size: 12px; line-height: 1.4; border-bottom: 1px solid #313a45;">
+          <strong style="color: #c2cfe0;">当前页面：</strong>
+          <span id="currentPageInfo">未加载</span>
+        </div>
+
+        <!-- 内容提取面板 -->
+        <div class="panel active" id="panel-extract">
+          <div class="panel-header">
+            <h3>提取页面内容</h3>
+            <p class="desc">使用 CSS 选择器精准提取</p>
+          </div>
+          
+          <div class="form-group">
+            <label>CSS 选择器</label>
+            <div class="input-with-actions">
+              <input type="text" id="extractSelector" placeholder="例如: article h1, .content p" />
+              <button id="pickSelectorBtn" class="btn-mini" title="从页面选择">🎯</button>
+            </div>
+            <div class="quick-selectors">
+              <span class="quick-tag" data-selector="h1,h2,h3">标题</span>
+              <span class="quick-tag" data-selector="p">段落</span>
+              <span class="quick-tag" data-selector="a[href]">链接</span>
+              <span class="quick-tag" data-selector="img">图片</span>
+              <span class="quick-tag" data-selector="table">表格</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>提取类型</label>
+            <div class="radio-group">
+              <label class="radio">
+                <input type="radio" name="extractType" value="text" checked>
+                <span>文本内容</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="extractType" value="html">
+                <span>HTML</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="extractType" value="attr">
+                <span>属性</span>
+              </label>
+            </div>
+            <input type="text" id="attrName" class="attr-input hidden" placeholder="属性名，如: href, src" />
+          </div>
+
+          <button id="extractBtn" class="btn btn-primary btn-block">🔍 开始提取</button>
+
+          <div class="results-area">
+            <div class="results-header">
+              <span>提取结果</span>
+              <span id="resultCount" class="count">0 条</span>
+            </div>
+            <div id="extractResult" class="results-list"></div>
+          </div>
+        </div>
+
+        <!-- 页面清理面板 -->
+        <div class="panel" id="panel-cleanup">
+          <div class="panel-header">
+            <h3>清理页面元素</h3>
+            <p class="desc">删除不需要的内容</p>
+          </div>
+
+          <div class="cleanup-presets">
+            <div class="preset-card" data-action="ads">
+              <span class="icon">🚫</span>
+              <div class="info">
+                <strong>广告</strong>
+                <span>.ad, .ads, .banner...</span>
+              </div>
+            </div>
+            <div class="preset-card" data-action="nav">
+              <span class="icon">📍</span>
+              <div class="info">
+                <strong>导航栏</strong>
+                <span>nav, header, .navbar...</span>
+              </div>
+            </div>
+            <div class="preset-card" data-action="footer">
+              <span class="icon">👣</span>
+              <div class="info">
+                <strong>页脚</strong>
+                <span>footer, .footer...</span>
+              </div>
+            </div>
+            <div class="preset-card" data-action="sidebar">
+              <span class="icon">📊</span>
+              <div class="info">
+                <strong>侧边栏</strong>
+                <span>.sidebar, aside...</span>
+              </div>
+            </div>
+            <div class="preset-card" data-action="popup">
+              <span class="icon">💬</span>
+              <div class="info">
+                <strong>弹窗/浮层</strong>
+                <span>.modal, .popup...</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="form-group">
+            <label>自定义删除</label>
+            <div class="input-with-actions">
+              <input type="text" id="deleteSelector" placeholder="输入 CSS 选择器" />
+              <button id="pickDeleteBtn" class="btn-mini" title="从页面选择">🎯</button>
+            </div>
+            <button id="deleteBtn" class="btn btn-danger btn-block">🗑️ 删除选中元素</button>
+          </div>
+        </div>
+
+        <!-- 脚本注入面板 -->
+        <div class="panel" id="panel-inject">
+          <div class="panel-header">
+            <h3>注入自定义脚本</h3>
+            <p class="desc">执行 JavaScript 或添加 CSS</p>
+          </div>
+
+          <div class="form-group">
+            <label>脚本类型</label>
+            <div class="radio-group">
+              <label class="radio">
+                <input type="radio" name="scriptType" value="js" checked>
+                <span>JavaScript</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="scriptType" value="css">
+                <span>CSS</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>代码</label>
+            <textarea id="injectCode" placeholder="// 输入 JavaScript 代码
+// 或 CSS 样式"></textarea>
+          </div>
+
+
+
+          <button id="injectBtn" class="btn btn-secondary btn-block">💉 执行脚本</button>
+        </div>
+
+        <!-- 下载条目组 - 默认隐藏 -->
+        <div id="download"  class="download-group hidden">
+          <div class="group-header">
+            <h4>📥 可下载内容</h4>
+            <div class="group-actions">
+              <button id="selectAllDownloadsBtn" class="btn-mini" title="切换全选" aria-label="切换全选">全选</button>
+              <button id="downloadSelectedBtn" class="btn btn-primary" title="下载选中项" aria-label="下载选中项" disabled>📥 下载所选</button>
+            </div>
+          </div>
+           <div class="form-group">
+            <label>保存路径</label>
+            <div class="input-with-actions">
+              <input type="text" id="savePath" placeholder="选择保存路径" readonly />
+              <button id="browsePathBtn" class="btn-mini" title="浏览路径">📁</button>
+            </div>
+          </div>
+          <div id="downloadEntriesList" class="download-entries-list">
+            <div class="empty-state">请先提取包含链接的内容</div>
+          </div>
+        </div>
+
+
+        <!-- 页面源码面板 -->
+        <div class="panel" id="panel-source">
+          <div class="panel-header">
+            <h3>开发者工具</h3>
+            <p class="desc">使用浏览器原生开发者工具查看页面源码</p>
+          </div>
+
+          <div class="form-group">
+            <button id="openDevToolsBtn" class="btn btn-primary btn-block">🔧 打开开发者工具</button>
+            <p class="desc-small">在开发者工具中可以查看HTML源码、CSS样式、JavaScript控制台等</p>
+          </div>
+
+          <div class="devtools-info">
+            <h4>📋 使用提示</h4>
+            <ul>
+              <li><strong>Elements</strong> 标签：查看和编辑HTML结构</li>
+              <li><strong>Console</strong> 标签：查看JavaScript错误和日志</li>
+              <li><strong>Sources</strong> 标签：查看和调试JavaScript代码</li>
+              <li><strong>Network</strong> 标签：查看网络请求</li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 右侧网页预览 -->
+      <div class="preview-container">
+        <div class="preview-toolbar">
+          <span id="pageTitle" class="page-title">未加载页面</span>
+          <span id="pageUrl" class="page-url"></span>
+        </div>
+        <div class="webview-wrapper">
+          <webview id="webview" class="webview" nodeintegration="false" webpreferences="contextIsolation=yes, nodeIntegration=no"></webview>
+          <div id="loading" class="loading-overlay hidden">
+            <div class="spinner"></div>
+            <span>加载中...</span>
+          </div>
+          <!-- 元素选择遮罩 -->
+          <div id="selectorOverlay" class="selector-overlay hidden">
+            <div class="selector-hint">
+              <span>🎯 点击元素查看详情</span>
+              <button id="cancelSelectBtn" class="btn-sm">取消</button>
+            </div>
+          </div>
+          
+          <!-- 元素信息面板 -->
+          <div id="elementInfoPanel" class="element-info-panel hidden">
+            <div class="panel-header">
+              <h4>📋 元素信息</h4>
+              <button id="closeInfoBtn" class="btn-close">✕</button>
+            </div>
+            <div class="info-content">
+              <div class="info-row">
+                <label>标签:</label>
+                <span id="selectedTag">-</span>
+              </div>
+              <div class="info-row">
+                <label>ID:</label>
+                <span id="selectedId">-</span>
+              </div>
+              <div class="info-row">
+                <label>Class:</label>
+                <span id="selectedClass">-</span>
+              </div>
+              <div class="info-row xpath-row">
+                <label>XPath:</label>
+                <div class="copy-row">
+                  <code id="selectedXPath">-</code>
+                  <button id="copyXPathBtn" class="btn-copy" title="复制">📋</button>
+                </div>
+              </div>
+              <div class="info-row selector-row">
+                <label>CSS 选择器:</label>
+                <div class="copy-row">
+                  <code id="selectedSelector">-</code>
+                  <button id="copySelectorBtn" class="btn-copy" title="复制">📋</button>
+                </div>
+              </div>
+              <div id="imageInfo" class="info-row image-info hidden">
+                <label>图片地址:</label>
+                <div class="copy-row">
+                  <code id="selectedSrc">-</code>
+                  <button id="copySrcBtn" class="btn-copy" title="复制">📋</button>
+                </div>
+              </div>
+              <div class="info-row path-row">
+                <label>元素路径:</label>
+                <div id="elementPathContainer" class="element-path-container"></div>
+              </div>
+            </div>
+            <div class="panel-actions">
+              <button id="useSelectorBtn" class="btn btn-primary btn-sm">使用此选择器</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 状态栏 -->
+    <footer class="statusbar">
+      <span id="statusText">就绪</span>
+      <span id="elementInfo"></span>
+    </footer>
+  </div>
+
+  <script src="utils.js"></script>
+  <script src="config.js"></script>
+  <script src="state.js"></script>
+  <script src="webview-executor.js"></script>
+  <script src="url-loader.js"></script>
+  <script src="tab-manager.js"></script>
+  <script src="element-selector.js"></script>
+  <script src="content-extractor.js"></script>
+  <script src="element-cleaner.js"></script>
+  <script src="script-injector.js"></script>
+  <script src="data-exporter.js"></script>
+  <script src="source-viewer.js"></script>
+  <script src="context-menu.js"></script>
+  <script src="event-bindings.js"></script>
+  <script src="download-manager.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
