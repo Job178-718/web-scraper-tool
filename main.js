@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
@@ -26,6 +26,9 @@ function createWindow() {
     },
     icon: path.join(__dirname, 'assets', 'icon.ico')
   });
+
+  // 移除默认菜单栏
+  Menu.setApplicationMenu(null);
 
   // 加载应用的 index.html
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));

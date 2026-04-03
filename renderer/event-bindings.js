@@ -6,6 +6,7 @@ function bindEvents() {
   const urlInput = window.Utils.$('urlInput');
   const loadBtn = window.Utils.$('loadBtn');
   const refreshBtn = window.Utils.$('refreshBtn');
+  const backBtn = window.Utils.$('backBtn');
 
   if (urlInput && loadBtn) {
     loadBtn.addEventListener('click', () => window.UrlLoader.loadUrl());
@@ -171,6 +172,10 @@ function bindEvents() {
         window.Utils.setStatus('请输入要注入的代码', 'error');
       }
     });
+  }
+
+  if (backBtn) {
+    backBtn.addEventListener('click', () => window.UrlLoader.goBack());
   }
 
   // 添加保存路径相关元素（由 DownloadManager 或 ContentExtractor 绑定 browse 按钮）

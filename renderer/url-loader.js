@@ -53,8 +53,19 @@ function refreshPage() {
   }
 }
 
+function goBack() {
+  const webview = window.Utils.$('webview');
+  if (webview && webview.canGoBack()) {
+    webview.goBack();
+    window.Utils.setStatus('回退到上一个页面...', 'info');
+  } else {
+    window.Utils.setStatus('无法回退到上一个页面', 'warning');
+  }
+}
+
 // 导出URL加载功能
 window.UrlLoader = {
   loadUrl,
-  refreshPage
+  refreshPage,
+  goBack
 };
