@@ -4,8 +4,22 @@ function switchTab(tabName) {
     tab.classList.toggle('active', tab.dataset.tab === tabName);
   });
   document.querySelectorAll('.panel').forEach(panel => {
-    panel.classList.toggle('active', panel.id === `panel-${tabName}`);
+    // 如果是提取面板，保持隐藏状态
+    if (panel.id === 'panel-extract') {
+      panel.classList.remove('active'); // 确保提取面板始终不激活
+    } else {
+      panel.classList.toggle('active', panel.id === `panel-${tabName}`);
+    }
   });
+  
+  // 确保提取标签不被选中
+  const extractTab = document.querySelector('[data-tab="extract"]');
+  if (extractTab && tabName === 'extract') {
+    extractTab.classList.remove('active');
+    window.Utils.setStatus('内容提取功能已被禁用', 'warning');
+    return; // 不执行后续操作
+  }
+  
   // Ensure download group is hidden when switching away from inject
   const downloadGroup = document.getElementById('download');
   const injectPanel = document.getElementById('panel-inject');

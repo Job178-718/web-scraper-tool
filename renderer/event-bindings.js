@@ -109,44 +109,52 @@ function bindEvents() {
     });
   }
 
-  // 内容提取事件
+  // 内容提取事件 - 功能已禁用
   const extractBtn = window.Utils.$('extractBtn');
   const extractSelector = window.Utils.$('extractSelector');
   const extractType = document.querySelector('input[name="extractType"]:checked');
   const attrNameInput = window.Utils.$('attrName');
 
-  // 提取类型切换事件
+  // 提取类型切换事件 - 已禁用
   const extractTypeRadios = document.querySelectorAll('input[name="extractType"]');
   extractTypeRadios.forEach(radio => {
     radio.addEventListener('change', (e) => {
-      if (e.target.value === 'attr') {
-        attrNameInput?.classList.remove('hidden');
-      } else {
-        attrNameInput?.classList.add('hidden');
-      }
+      // 功能已禁用，什么都不做
+      window.Utils.setStatus('内容提取功能已被禁用', 'warning');
     });
   });
 
   if (extractBtn) {
     extractBtn.addEventListener('click', () => {
-      const selector = extractSelector?.value?.trim();
-      const type = document.querySelector('input[name="extractType"]:checked')?.value || 'text';
-      if (selector) {
-        window.ContentExtractor.extractContent(selector, type);
-      } else {
-        window.Utils.setStatus('请输入选择器', 'error');
-      }
+      // 功能已禁用
+      window.Utils.setStatus('内容提取功能已被禁用', 'warning');
+    });
+  }
+
+  // 如果存在选择器输入框，为其添加禁用提示
+  if (extractSelector) {
+    extractSelector.addEventListener('focus', () => {
+      window.Utils.setStatus('内容提取功能已被禁用', 'warning');
     });
   }
 
   // 元素清理事件
-  const cleanupBtn = window.Utils.$('cleanupBtn');
   const deleteBtn = window.Utils.$('deleteBtn');
   const deleteSelector = window.Utils.$('deleteSelector');
+  const smartCleanupBtn = window.Utils.$('smartCleanupBtn');
+  const batchCleanupBtn = window.Utils.$('batchCleanupBtn');
+  const undoCleanupBtn = window.Utils.$('undoCleanupBtn');
 
-  if (cleanupBtn) {
-    cleanupBtn.addEventListener('click', () => window.ElementCleaner.cleanupElements());
-  }
+  // 清理预设卡片事件
+  const cleanupPresetCards = document.querySelectorAll('.preset-card[data-action]');
+  cleanupPresetCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const action = card.dataset.action;
+      if (action && window.Config.CLEANUP_SELECTORS[action]) {
+        window.ElementCleaner.cleanupElements(action);
+      }
+    });
+  });
 
   if (deleteBtn) {
     deleteBtn.addEventListener('click', () => {
@@ -156,6 +164,28 @@ function bindEvents() {
       } else {
         window.Utils.setStatus('请输入要删除的选择器', 'error');
       }
+    });
+  }
+
+  // 智能清理按钮事件
+  if (smartCleanupBtn) {
+    smartCleanupBtn.addEventListener('click', () => {
+      window.ElementCleaner.smartCleanup();
+    });
+  }
+
+  // 批量清理按钮事件
+  if (batchCleanupBtn) {
+    batchCleanupBtn.addEventListener('click', () => {
+      // 默认清理广告、弹窗和Cookie提示
+      window.ElementCleaner.batchCleanup(['ads', 'popup', 'cookie']);
+    });
+  }
+
+  // 撤销清理按钮事件
+  if (undoCleanupBtn) {
+    undoCleanupBtn.addEventListener('click', () => {
+      window.ElementCleaner.undoLastCleanup();
     });
   }
 

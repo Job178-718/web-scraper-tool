@@ -28,8 +28,8 @@
       <aside class="sidebar">
         <!-- Tab 切换 -->
         <div class="tabs">
-          <button class="tab active" data-tab="extract">📦 内容提取</button>
-          <button class="tab" data-tab="cleanup">🧹 页面清理</button>
+          <button class="tab" data-tab="extract" style="display: none;">📦 内容提取</button>
+          <button class="tab active" data-tab="cleanup">🧹 页面清理</button>
           <button class="tab" data-tab="inject">💉 脚本注入</button>
           <button class="tab" data-tab="source">📄 页面源码</button>
         </div>
@@ -41,54 +41,17 @@
         </div>
 
         <!-- 内容提取面板 -->
-        <div class="panel active" id="panel-extract">
+        <div class="panel" id="panel-extract" style="display: none;">
           <div class="panel-header">
             <h3>提取页面内容</h3>
             <p class="desc">使用 CSS 选择器精准提取</p>
           </div>
           
-          <div class="form-group">
-            <label>CSS 选择器</label>
-            <div class="input-with-actions">
-              <input type="text" id="extractSelector" placeholder="例如: article h1, .content p" />
-              <button id="pickSelectorBtn" class="btn-mini" title="从页面选择">🎯</button>
+          <div class="panel-message">
+            <div class="message-content">
+              <h4>内容提取功能已禁用</h4>
+              <p>此功能已被管理员禁用。</p>
             </div>
-            <div class="quick-selectors">
-              <span class="quick-tag" data-selector="h1,h2,h3">标题</span>
-              <span class="quick-tag" data-selector="p">段落</span>
-              <span class="quick-tag" data-selector="a[href]">链接</span>
-              <span class="quick-tag" data-selector="img">图片</span>
-              <span class="quick-tag" data-selector="table">表格</span>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>提取类型</label>
-            <div class="radio-group">
-              <label class="radio">
-                <input type="radio" name="extractType" value="text" checked>
-                <span>文本内容</span>
-              </label>
-              <label class="radio">
-                <input type="radio" name="extractType" value="html">
-                <span>HTML</span>
-              </label>
-              <label class="radio">
-                <input type="radio" name="extractType" value="attr">
-                <span>属性</span>
-              </label>
-            </div>
-            <input type="text" id="attrName" class="attr-input hidden" placeholder="属性名，如: href, src" />
-          </div>
-
-          <button id="extractBtn" class="btn btn-primary btn-block">🔍 开始提取</button>
-
-          <div class="results-area">
-            <div class="results-header">
-              <span>提取结果</span>
-              <span id="resultCount" class="count">0 条</span>
-            </div>
-            <div id="extractResult" class="results-list"></div>
           </div>
         </div>
 
@@ -135,6 +98,33 @@
                 <span>.modal, .popup...</span>
               </div>
             </div>
+            <div class="preset-card" data-action="social">
+              <span class="icon">🌐</span>
+              <div class="info">
+                <strong>社交分享</strong>
+                <span>.social, .share...</span>
+              </div>
+            </div>
+            <div class="preset-card" data-action="comments">
+              <span class="icon">💭</span>
+              <div class="info">
+                <strong>评论区</strong>
+                <span>.comment, #comments...</span>
+              </div>
+            </div>
+            <div class="preset-card" data-action="cookie">
+              <span class="icon">🍪</span>
+              <div class="info">
+                <strong>Cookie提示</strong>
+                <span>.cookie, .consent...</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cleanup-actions">
+            <button id="smartCleanupBtn" class="btn btn-secondary">🤖 智能清理</button>
+            <button id="batchCleanupBtn" class="btn btn-secondary">🔄 批量清理</button>
+            <button id="undoCleanupBtn" class="btn btn-secondary">↩️ 撤销清理</button>
           </div>
 
           <div class="divider"></div>
